@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <!-- ====================================================================== -->
+  <!--                                                                        -->
+  <!--  JBoss, the OpenSource J2EE webOS                                      -->
+  <!--                                                                        -->
+  <!--  Distributable under LGPL license.                                     -->
+  <!--  See terms of license at http://www.gnu.org.                           -->
+  <!--                                                                        -->
+  <!-- ====================================================================== -->
+
+  <!-- $Id$ -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <name>JBossOSGi Reactor - Deployment</name>
+
+  <groupId>org.jboss.osgi.runtime</groupId>
+  <artifactId>jboss-osgi-deployment</artifactId>
+  <packaging>jar</packaging>
+
+  <version>1.0.1-SNAPSHOT</version>
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.osgi</groupId>
+    <artifactId>jboss-osgi-parent</artifactId>
+    <version>1.0.4</version>
+  </parent>
+
+  <!-- Subversion -->
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/trunk</developerConnection>
+    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
+  </scm>
+  
+  <!-- Properties -->
+  <properties>
+    <version.jboss.deployers>2.0.9.GA</version.jboss.deployers>
+    <version.jboss.osgi.spi>1.0.3</version.jboss.osgi.spi>
+    <version.osgi>4.2.0</version.osgi>
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+    <dependency>
+      <groupId>biz.aQute</groupId>
+      <artifactId>bnd</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.osgi</groupId>
+      <artifactId>jboss-osgi-spi</artifactId>
+      <version>${version.jboss.osgi.spi}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.deployers</groupId>
+      <artifactId>jboss-deployers-vfs</artifactId>
+      <version>${version.jboss.deployers}</version>
+    </dependency>
+
+    <!-- OSGi Dependencies -->
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>${version.osgi}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <version>${version.osgi}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Test Dependecies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <!-- Build -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <!-- For some reason the distribution javadoc module needs this -->
+                  <file>target/${artifactId}-${version}-sources.jar</file>
+                  <classifier>sources</classifier>
+                  <type>jar</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>build-test-jars</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <property name="maven.runtime.classpath" refid="maven.runtime.classpath" />
+                <property name="tests.output.dir" value="${project.build.directory}" />
+                <ant antfile="scripts/antrun-test-jars.xml" />
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>log4j.output.dir</name>
+              <value>${project.build.directory}</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
