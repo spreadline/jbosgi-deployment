@@ -1,0 +1,4 @@
+# bnd build -classpath target/test-classes -output target/test-libs/simple-bundle.jar src/test/resources/simple/simple.bnd
+
+Bundle-SymbolicName: simple-bundle
+Export-Package: org.jboss.test.osgi.deployment.simple
