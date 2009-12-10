@@ -103,7 +103,7 @@ public class SystemDeployerService extends AbstractDeployerService
          {
             log.debug("Install: " + dep.getLocation());
             
-            String location = dep.getLocation().toExternalForm();
+            String location = dep.getLocation();
             Bundle bundle = context.installBundle(location);
 
             bundleMap.put(dep, bundle);

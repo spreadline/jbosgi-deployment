@@ -39,7 +39,7 @@
   <!-- Properties -->
   <properties>
     <version.jboss.deployers>2.0.9.GA</version.jboss.deployers>
-    <version.jboss.osgi.spi>1.0.3</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.4-SNAPSHOT</version.jboss.osgi.spi>
     <version.osgi>4.2.0</version.osgi>
   </properties>
 

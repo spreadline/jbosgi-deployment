@@ -22,7 +22,6 @@
 package org.jboss.osgi.deployment.internal;
 
 import java.io.Serializable;
-import java.net.URL;
 
 import org.jboss.osgi.deployment.deployer.Deployment;
 import org.jboss.osgi.spi.util.AttachmentSupport;
@@ -64,9 +63,9 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    /**
     * Get the bundle location
     */
-   public URL getLocation()
+   public String getLocation()
    {
-      return info.getRootURL();
+      return info.getLocation();
    }
 
    /**
@@ -146,7 +145,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    {
       String symbolicName = getSymbolicName();
       String version = getVersion();
-      URL url = getLocation();
+      String url = info.getLocation();
       return "[" + symbolicName + "-" + version + ",url=" + url + "]";
    }
 }

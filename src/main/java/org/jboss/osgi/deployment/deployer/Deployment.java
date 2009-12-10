@@ -21,8 +21,6 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-import java.net.URL;
-
 import org.jboss.osgi.spi.Attachments;
 import org.jboss.virtual.VirtualFile;
 
@@ -45,7 +43,7 @@ public interface Deployment extends Attachments
    /**
     * Get the bundle location
     */
-   public URL getLocation();
+   public String getLocation();
 
    /**
     * Get the bundle symbolic name

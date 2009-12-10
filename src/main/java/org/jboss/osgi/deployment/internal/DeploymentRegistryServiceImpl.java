@@ -96,9 +96,11 @@ public class DeploymentRegistryServiceImpl implements DeploymentRegistryService
          throw new IllegalArgumentException("Cannot obtain bundle deployment for: null");
 
       Deployment dep = null;
+      String urlLocation = url.toExternalForm();
       for (Deployment auxDep : deployments)
       {
-         if (url.equals(auxDep.getLocation()))
+         String auxLocation = auxDep.getLocation();
+         if (urlLocation.equals(auxLocation))
          {
             dep = auxDep;
             break;
