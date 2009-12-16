@@ -54,10 +54,13 @@
       <artifactId>jboss-osgi-spi</artifactId>
       <version>${version.jboss.osgi.spi}</version>
     </dependency>
+    
+    <!-- Provided Dependencies -->
     <dependency>
       <groupId>org.jboss.deployers</groupId>
       <artifactId>jboss-deployers-vfs</artifactId>
       <version>${version.jboss.deployers}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- OSGi Dependencies -->
