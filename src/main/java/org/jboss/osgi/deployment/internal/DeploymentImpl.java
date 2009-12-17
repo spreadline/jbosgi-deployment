@@ -43,6 +43,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    private BundleInfo info;
    private int startLevel;
    private boolean autoStart;
+   private boolean update;
 
    public DeploymentImpl(BundleInfo info)
    {
@@ -52,76 +53,59 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
       this.info = info;
    }
    
-   /**
-    * Get the root virtual file
-    */
    public VirtualFile getRoot()
    {
       return info.getRoot();
    }
 
-   /**
-    * Get the bundle location
-    */
    public String getLocation()
    {
       return info.getLocation();
    }
 
-   /**
-    * Get the bundle symbolic name
-    */
    public String getSymbolicName()
    {
       return info.getSymbolicName();
    }
 
-   /**
-    * Get the bundle version
-    */
    public String getVersion()
    {
       return info.getVersion().toString();
    }
 
-   /**
-    * Get the manifest header for the given key.
-    */
    public String getManifestHeader(String key)
    {
       return info.getManifestHeader(key);
    }
    
-   /**
-    * Get the start level associated with this deployment
-    */
    public int getStartLevel()
    {
       return startLevel;
    }
 
-   /**
-    * Set the start level associated with this deployment
-    */
    public void setStartLevel(int startLevel)
    {
       this.startLevel = startLevel;
    }
 
-   /**
-    * Get the autostart flag associated with this deployment
-    */
    public boolean isAutoStart()
    {
       return autoStart;
    }
 
-   /**
-    * Set the autostart flag associated with this deployment
-    */
    public void setAutoStart(boolean autoStart)
    {
       this.autoStart = autoStart;
+   }
+
+   public boolean isBundleUpdate()
+   {
+      return update;
+   }
+
+   public void setBundleUpdate(boolean update)
+   {
+      this.update = update;
    }
 
    @Override

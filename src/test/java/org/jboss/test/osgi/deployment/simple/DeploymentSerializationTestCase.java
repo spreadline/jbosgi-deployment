@@ -31,7 +31,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
 
 import org.jboss.osgi.deployment.deployer.Deployment;
 import org.jboss.osgi.deployment.internal.DeploymentImpl;
@@ -83,7 +82,7 @@ public class DeploymentSerializationTestCase
       assertEquals(dep, res);
    }
 
-   private BundleInfo getBundleInfo() throws MalformedURLException
+   private BundleInfo getBundleInfo() throws Exception
    {
       File file = new File("target/test-libs/simple-bundle.jar");
       assertTrue("File exists: " + file, file.exists());

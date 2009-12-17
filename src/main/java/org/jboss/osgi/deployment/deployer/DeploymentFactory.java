@@ -28,6 +28,7 @@ import java.net.URL;
 import org.jboss.osgi.deployment.internal.DeploymentImpl;
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.virtual.VirtualFile;
+import org.osgi.framework.BundleException;
 
 /**
  * A deployment factory.
@@ -42,19 +43,19 @@ public class DeploymentFactory
    {
    }
    
-   public static Deployment createDeployment(URL url)
+   public static Deployment createDeployment(URL url) throws BundleException
    {
       BundleInfo info = BundleInfo.createBundleInfo(url);
       return new DeploymentImpl(info);
    }
    
-   public static Deployment createDeployment(VirtualFile file)
+   public static Deployment createDeployment(VirtualFile file) throws BundleException
    {
       BundleInfo info = BundleInfo.createBundleInfo(file);
       return new DeploymentImpl(info);
    }
    
-   public static Deployment createDeployment(BundleInfo info)
+   public static Deployment createDeployment(BundleInfo info) throws BundleException
    {
       return new DeploymentImpl(info);
    }

@@ -48,17 +48,17 @@ public interface DeployerService
    /** 
     * Create a deployment from the given location. 
     */
-   Deployment createDeployment(URL url);
+   Deployment createDeployment(URL url) throws BundleException;
    
    /** 
     * Create a deployment from the given file. 
     */
-   Deployment createDeployment(VirtualFile file);
+   Deployment createDeployment(VirtualFile file) throws BundleException;
    
    /** 
     * Create a deployment from the given bundle info. 
     */
-   Deployment createDeployment(BundleInfo info);
+   Deployment createDeployment(BundleInfo info) throws BundleException;
    
    /**
     * Deploy an array of bundles

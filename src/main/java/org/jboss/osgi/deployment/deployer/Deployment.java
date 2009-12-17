@@ -38,45 +38,55 @@ public interface Deployment extends Attachments
    /**
     * Get the root virtual file
     */
-   public VirtualFile getRoot();
+   VirtualFile getRoot();
    
    /**
     * Get the bundle location
     */
-   public String getLocation();
+   String getLocation();
 
    /**
     * Get the bundle symbolic name
     */
-   public String getSymbolicName();
+   String getSymbolicName();
 
    /**
     * Get the bundle version
     */
-   public String getVersion();
+   String getVersion();
 
    /**
     * Get the manifest header for the given key.
     */
-   public String getManifestHeader(String key);
+   String getManifestHeader(String key);
    
    /**
     * Get the start level associated with this deployment
     */
-   public int getStartLevel();
+   int getStartLevel();
 
    /**
     * Set the start level associated with this deployment
     */
-   public void setStartLevel(int startLevel);
+   void setStartLevel(int startLevel);
 
    /**
     * Get the autostart flag associated with this deployment
     */
-   public boolean isAutoStart();
+   boolean isAutoStart();
 
    /**
     * Set the autostart flag associated with this deployment
     */
-   public void setAutoStart(boolean autoStart);
+   void setAutoStart(boolean autoStart);
+
+   /**
+    * Get the update flag associated with this deployment
+    */
+   boolean isBundleUpdate();
+
+   /**
+    * Set the update flag associated with this deployment
+    */
+   void setBundleUpdate(boolean update);
 }

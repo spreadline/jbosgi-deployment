@@ -27,6 +27,7 @@ import java.net.URL;
 
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.virtual.VirtualFile;
+import org.osgi.framework.BundleException;
 
 /**
  * An abstract base implementation of the DeployerService.
@@ -36,17 +37,17 @@ import org.jboss.virtual.VirtualFile;
  */
 public abstract class AbstractDeployerService implements DeployerService
 {
-   public Deployment createDeployment(URL url)
+   public Deployment createDeployment(URL url) throws BundleException
    {
       return DeploymentFactory.createDeployment(url);
    }
    
-   public Deployment createDeployment(VirtualFile file)
+   public Deployment createDeployment(VirtualFile file) throws BundleException
    {
       return DeploymentFactory.createDeployment(file);
    }
    
-   public Deployment createDeployment(BundleInfo info)
+   public Deployment createDeployment(BundleInfo info) throws BundleException
    {
       return DeploymentFactory.createDeployment(info);
    }
