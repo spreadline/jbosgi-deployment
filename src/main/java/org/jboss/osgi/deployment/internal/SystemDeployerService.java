@@ -60,7 +60,7 @@ public class SystemDeployerService extends AbstractDeployerService
 {
    // Provide logging
    private Logger log = LoggerFactory.getLogger(SystemDeployerService.class);
-   
+
    private BundleContext context;
    private ServiceTracker startLevelTracker;
 
@@ -96,26 +96,19 @@ public class SystemDeployerService extends AbstractDeployerService
 
       List<Bundle> resolvableBundles = new ArrayList<Bundle>();
       Map<Deployment, Bundle> bundleMap = new HashMap<Deployment, Bundle>();
-      
+
       for (Deployment dep : depArr)
       {
-         try
-         {
-            log.debug("Install: " + dep.getLocation());
-            
-            String location = dep.getLocation();
-            Bundle bundle = context.installBundle(location);
+         log.debug("Install: " + dep.getLocation());
 
-            bundleMap.put(dep, bundle);
-            if (dep.isAutoStart())
-               resolvableBundles.add(bundle);
+         String location = dep.getLocation();
+         Bundle bundle = context.installBundle(location);
 
-            registry.registerDeployment(dep);
-         }
-         catch (BundleException ex)
-         {
-            log.error("Cannot install bundle: " + dep, ex);
-         }
+         bundleMap.put(dep, bundle);
+         if (dep.isAutoStart())
+            resolvableBundles.add(bundle);
+
+         registry.registerDeployment(dep);
       }
 
       // Resolve the installed bundles through the PackageAdmin
@@ -127,7 +120,7 @@ public class SystemDeployerService extends AbstractDeployerService
          resolvableBundles.toArray(resolvableBundleArr);
          packageAdmin.resolveBundles(resolvableBundleArr);
       }
-      
+
       // Start the installed bundles
       for (Entry<Deployment, Bundle> entry : bundleMap.entrySet())
       {
@@ -177,7 +170,7 @@ public class SystemDeployerService extends AbstractDeployerService
          if (bundle != null)
          {
             log.debug("Uninstall: " + bundle);
-            
+
             registry.unregisterDeployment(dep);
 
             bundle.uninstall();
@@ -235,7 +228,7 @@ public class SystemDeployerService extends AbstractDeployerService
       ServiceReference sref = context.getServiceReference(DeploymentRegistryService.class.getName());
       if (sref == null)
          throw new IllegalStateException("Cannot obtain DeploymentRegistryService");
-      
+
       return (DeploymentRegistryService)context.getService(sref);
    }
 
