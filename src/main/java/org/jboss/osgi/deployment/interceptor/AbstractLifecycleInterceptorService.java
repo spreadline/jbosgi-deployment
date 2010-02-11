@@ -30,14 +30,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.jboss.logging.Logger;
 import org.jboss.osgi.deployment.internal.InterceptorWrapper;
 import org.jboss.osgi.spi.util.ConstantsHelper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A basic service that manages bundle lifecycle interceptors.
@@ -48,7 +47,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractLifecycleInterceptorService implements LifecycleInterceptorService 
 {
    // Provide logging
-   private Logger log = LoggerFactory.getLogger(AbstractLifecycleInterceptorService.class);
+   private static final Logger log = Logger.getLogger(AbstractLifecycleInterceptorService.class);
 
    // The system bundle context
    private BundleContext context;

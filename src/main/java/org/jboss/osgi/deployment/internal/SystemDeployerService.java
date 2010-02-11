@@ -34,6 +34,7 @@ import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.StandardMBean;
 
+import org.jboss.logging.Logger;
 import org.jboss.osgi.deployment.deployer.AbstractDeployerService;
 import org.jboss.osgi.deployment.deployer.DeployerService;
 import org.jboss.osgi.deployment.deployer.Deployment;
@@ -47,8 +48,6 @@ import org.osgi.framework.Version;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgi.util.tracker.ServiceTracker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link DeployerService} that installs/uninstalls the bundles directly on the OSGi framework.
@@ -59,7 +58,7 @@ import org.slf4j.LoggerFactory;
 public class SystemDeployerService extends AbstractDeployerService
 {
    // Provide logging
-   private Logger log = LoggerFactory.getLogger(SystemDeployerService.class);
+   private static final Logger log = Logger.getLogger(SystemDeployerService.class);
 
    private BundleContext context;
    private ServiceTracker startLevelTracker;

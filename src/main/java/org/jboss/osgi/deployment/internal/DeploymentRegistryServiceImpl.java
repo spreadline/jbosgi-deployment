@@ -28,13 +28,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.jboss.logging.Logger;
 import org.jboss.osgi.deployment.deployer.DeployerService;
 import org.jboss.osgi.deployment.deployer.Deployment;
 import org.jboss.osgi.deployment.deployer.DeploymentRegistryService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link DeployerService} that installs/uninstalls the bundles directly on the OSGi framework without going through the MC registered deployers.
@@ -45,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public class DeploymentRegistryServiceImpl implements DeploymentRegistryService
 {
    // Provide logging
-   private Logger log = LoggerFactory.getLogger(DeploymentRegistryServiceImpl.class);
+   private static final Logger log = Logger.getLogger(DeploymentRegistryServiceImpl.class);
    
    private List<Deployment> deployments = new CopyOnWriteArrayList<Deployment>();
 
