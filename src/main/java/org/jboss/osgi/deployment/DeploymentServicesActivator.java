@@ -29,9 +29,7 @@ import javax.management.MBeanServer;
 
 import org.jboss.osgi.deployment.deployer.DeployerService;
 import org.jboss.osgi.deployment.deployer.DeploymentRegistryService;
-import org.jboss.osgi.deployment.interceptor.LifecycleInterceptorService;
 import org.jboss.osgi.deployment.internal.DeploymentRegistryServiceImpl;
-import org.jboss.osgi.deployment.internal.LifecycleInterceptorServiceImpl;
 import org.jboss.osgi.deployment.internal.SystemDeployerService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -62,10 +60,6 @@ public class DeploymentServicesActivator
       props.put("provider", "system");
       final SystemDeployerService deployerService = new SystemDeployerService(context);
       context.registerService(DeployerService.class.getName(), deployerService, props);
-
-      // Register the lifecycle interceptor related services
-      LifecycleInterceptorService service = new LifecycleInterceptorServiceImpl(context);
-      context.registerService(LifecycleInterceptorService.class.getName(), service, null);
 
       // Track other DeployerService implementations and register as MBean
       ServiceTracker serviceTracker = new ServiceTracker(context, DeployerService.class.getName(), null)
