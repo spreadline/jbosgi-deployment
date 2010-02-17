@@ -87,7 +87,7 @@ public class DeploymentSerializationTestCase
       File file = new File("target/test-libs/simple-bundle.jar");
       assertTrue("File exists: " + file, file.exists());
       
-      BundleInfo info = BundleInfo.createBundleInfo(file.toURL());
+      BundleInfo info = BundleInfo.createBundleInfo(file.toURI().toURL());
       return info;
    }
 }
