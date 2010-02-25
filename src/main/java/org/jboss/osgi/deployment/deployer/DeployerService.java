@@ -25,9 +25,6 @@ package org.jboss.osgi.deployment.deployer;
 
 import java.net.URL;
 
-import javax.management.ObjectName;
-
-import org.jboss.osgi.spi.management.ObjectNameFactory;
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.virtual.VirtualFile;
 import org.osgi.framework.BundleException;
@@ -40,11 +37,6 @@ import org.osgi.framework.BundleException;
  */
 public interface DeployerService
 {
-   /**
-    * The object name under which this is registered: 'jboss.osgi:service=DeployerService'
-    */
-   ObjectName MBEAN_DEPLOYER_SERVICE = ObjectNameFactory.create("jboss.osgi:service=DeployerService");
-
    /** 
     * Create a deployment from the given location. 
     */
@@ -69,14 +61,4 @@ public interface DeployerService
     * Undeploy an array of bundles
     */
    void undeploy(Deployment[] bundleDeps) throws BundleException;
-
-   /**
-    * Deploy bundle from URL
-    */
-   void deploy(URL url) throws BundleException;
-
-   /**
-    * Undeploy bundle from URL.
-    */
-   void undeploy(URL url) throws BundleException;
 }

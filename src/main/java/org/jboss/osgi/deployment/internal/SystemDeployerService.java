@@ -23,16 +23,11 @@ package org.jboss.osgi.deployment.internal;
 
 //$Id$
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.management.JMException;
-import javax.management.MBeanServer;
-import javax.management.StandardMBean;
 
 import org.jboss.logging.Logger;
 import org.jboss.osgi.deployment.deployer.AbstractDeployerService;
@@ -66,29 +61,9 @@ public class SystemDeployerService extends AbstractDeployerService
    public SystemDeployerService(BundleContext context)
    {
       this.context = context;
-
-      // Track the MBeanServer and register the DeployerService
-      ServiceTracker jmxTracker = new ServiceTracker(context, MBeanServer.class.getName(), null)
-      {
-         @Override
-         public Object addingService(ServiceReference reference)
-         {
-            MBeanServer mbeanServer = (MBeanServer)super.addingService(reference);
-            registerDeployerServiceMBean(context, mbeanServer);
-            return mbeanServer;
-         }
-
-         @Override
-         public void removedService(ServiceReference reference, Object service)
-         {
-            MBeanServer mbeanServer = (MBeanServer)service;
-            unregisterDeployerServiceMBean(mbeanServer);
-            super.removedService(reference, service);
-         }
-      };
-      jmxTracker.open();
    }
 
+   @Override
    public void deploy(Deployment[] depArr) throws BundleException
    {
       DeploymentRegistryService registry = getDeploymentRegistry();
@@ -159,6 +134,7 @@ public class SystemDeployerService extends AbstractDeployerService
       }
    }
 
+   @Override
    public void undeploy(Deployment[] depArr) throws BundleException
    {
       DeploymentRegistryService registry = getDeploymentRegistry();
@@ -178,26 +154,6 @@ public class SystemDeployerService extends AbstractDeployerService
          {
             log.warn("Cannot obtain bundle for: " + dep);
          }
-      }
-   }
-
-   public void deploy(URL url) throws BundleException
-   {
-      Deployment dep = createDeployment(url);
-      deploy(new Deployment[] { dep });
-   }
-
-   public void undeploy(URL url) throws BundleException
-   {
-      DeploymentRegistryService registry = getDeploymentRegistry();
-      Deployment dep = registry.getDeployment(url);
-      if (dep != null)
-      {
-         undeploy(new Deployment[] { dep });
-      }
-      else
-      {
-         log.warn("Cannot find deployment for: " + url);
       }
    }
 
@@ -239,42 +195,5 @@ public class SystemDeployerService extends AbstractDeployerService
          startLevelTracker.open();
       }
       return (StartLevel)startLevelTracker.getService();
-   }
-
-   public void registerDeployerServiceMBean(BundleContext context, MBeanServer mbeanServer)
-   {
-      try
-      {
-         // Get the DeployerService with the highest ranking
-         ServiceReference sref = context.getServiceReference(DeployerService.class.getName());
-         if (sref == null)
-            throw new IllegalStateException("Cannot obtain deployer service");
-
-         // Unregister the DeployerService with a potentialy lower ranking
-         if (mbeanServer.isRegistered(DeployerService.MBEAN_DEPLOYER_SERVICE))
-            mbeanServer.unregisterMBean(DeployerService.MBEAN_DEPLOYER_SERVICE);
-
-         // Register the DeployerService with the highest ranking
-         DeployerService service = (DeployerService)context.getService(sref);
-         StandardMBean mbean = new StandardMBean(service, DeployerService.class);
-         mbeanServer.registerMBean(mbean, DeployerService.MBEAN_DEPLOYER_SERVICE);
-      }
-      catch (JMException ex)
-      {
-         throw new IllegalStateException("Cannot register DeployerService MBean", ex);
-      }
-   }
-
-   public void unregisterDeployerServiceMBean(MBeanServer mbeanServer)
-   {
-      try
-      {
-         if (mbeanServer.isRegistered(DeployerService.MBEAN_DEPLOYER_SERVICE))
-            mbeanServer.unregisterMBean(DeployerService.MBEAN_DEPLOYER_SERVICE);
-      }
-      catch (JMException ex)
-      {
-         log.error("Cannot unregister DeployerService MBean", ex);
-      }
    }
 }

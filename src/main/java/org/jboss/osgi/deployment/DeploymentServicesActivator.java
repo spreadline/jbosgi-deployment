@@ -25,15 +25,11 @@ package org.jboss.osgi.deployment;
 
 import java.util.Properties;
 
-import javax.management.MBeanServer;
-
 import org.jboss.osgi.deployment.deployer.DeployerService;
 import org.jboss.osgi.deployment.deployer.DeploymentRegistryService;
 import org.jboss.osgi.deployment.internal.DeploymentRegistryServiceImpl;
 import org.jboss.osgi.deployment.internal.SystemDeployerService;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * An activator for the deployment services.
@@ -58,38 +54,8 @@ public class DeploymentServicesActivator
       // Register the SystemDeployerService
       Properties props = new Properties();
       props.put("provider", "system");
-      final SystemDeployerService deployerService = new SystemDeployerService(context);
+      SystemDeployerService deployerService = new SystemDeployerService(context);
       context.registerService(DeployerService.class.getName(), deployerService, props);
-
-      // Track other DeployerService implementations and register as MBean
-      ServiceTracker serviceTracker = new ServiceTracker(context, DeployerService.class.getName(), null)
-      {
-         @Override
-         public Object addingService(ServiceReference reference)
-         {
-            DeployerService service = (DeployerService)super.addingService(reference);
-            ServiceReference sref = context.getServiceReference(MBeanServer.class.getName());
-            if (sref != null)
-            {
-               MBeanServer mbeanServer = (MBeanServer)context.getService(sref);
-               deployerService.registerDeployerServiceMBean(context, mbeanServer);
-            }
-            return service;
-         }
-
-         @Override
-         public void removedService(ServiceReference reference, Object service)
-         {
-            ServiceReference sref = context.getServiceReference(MBeanServer.class.getName());
-            if (sref != null)
-            {
-               MBeanServer mbeanServer = (MBeanServer)context.getService(sref);
-               deployerService.unregisterDeployerServiceMBean(mbeanServer);
-            }
-            super.removedService(reference, service);
-         }
-      };
-      serviceTracker.open();
    }
 
    public void stop(BundleContext context)
