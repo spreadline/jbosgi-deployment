@@ -21,11 +21,10 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-import org.jboss.osgi.spi.Attachments;
-import org.jboss.virtual.VirtualFile;
-
-
 //$Id$
+
+import org.jboss.osgi.spi.Attachments;
+import org.jboss.osgi.vfs.VirtualFile;
 
 /**
  * An abstraction of a bundle deployment

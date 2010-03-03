@@ -26,7 +26,7 @@ package org.jboss.osgi.deployment.deployer;
 import java.net.URL;
 
 import org.jboss.osgi.spi.util.BundleInfo;
-import org.jboss.virtual.VirtualFile;
+import org.jboss.osgi.vfs.VirtualFile;
 import org.osgi.framework.BundleException;
 
 /**

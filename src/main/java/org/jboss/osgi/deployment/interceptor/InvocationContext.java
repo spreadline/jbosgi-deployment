@@ -24,7 +24,7 @@ package org.jboss.osgi.deployment.interceptor;
 //$Id$
 
 import org.jboss.osgi.spi.Attachments;
-import org.jboss.virtual.VirtualFile;
+import org.jboss.osgi.vfs.VirtualFile;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 

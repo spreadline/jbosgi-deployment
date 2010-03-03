@@ -21,14 +21,14 @@
  */
 package org.jboss.osgi.deployment.internal;
 
+//$Id$
+
 import java.io.Serializable;
 
 import org.jboss.osgi.deployment.deployer.Deployment;
 import org.jboss.osgi.spi.util.AttachmentSupport;
 import org.jboss.osgi.spi.util.BundleInfo;
-import org.jboss.virtual.VirtualFile;
-
-//$Id$
+import org.jboss.osgi.vfs.VirtualFile;
 
 /**
  * An abstraction of a bundle deployment
