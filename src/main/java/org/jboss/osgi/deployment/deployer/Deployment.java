@@ -62,12 +62,12 @@ public interface Deployment extends Attachments
    /**
     * Get the start level associated with this deployment
     */
-   int getStartLevel();
+   Integer getStartLevel();
 
    /**
     * Set the start level associated with this deployment
     */
-   void setStartLevel(int startLevel);
+   void setStartLevel(Integer startLevel);
 
    /**
     * Get the autostart flag associated with this deployment

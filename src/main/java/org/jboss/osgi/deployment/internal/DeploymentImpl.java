@@ -41,7 +41,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    private static final long serialVersionUID = 6216977125749367927L;
    
    private BundleInfo info;
-   private int startLevel;
+   private Integer startLevel;
    private boolean autoStart;
    private boolean update;
 
@@ -53,56 +53,70 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
       this.info = info;
    }
    
+   @Override
    public VirtualFile getRoot()
    {
       return info.getRoot();
    }
 
+   @Override
    public String getLocation()
    {
       return info.getLocation();
    }
 
+   @Override
    public String getSymbolicName()
    {
       return info.getSymbolicName();
    }
 
+   @Override
    public String getVersion()
    {
       return info.getVersion().toString();
    }
 
+   @Override
    public String getManifestHeader(String key)
    {
       return info.getManifestHeader(key);
    }
    
-   public int getStartLevel()
+   @Override
+   public Integer getStartLevel()
    {
       return startLevel;
    }
 
-   public void setStartLevel(int startLevel)
+   @Override
+   public void setStartLevel(Integer startLevel)
    {
+      if (startLevel == null || startLevel < 1)
+         throw new IllegalArgumentException("Start level must be greater than one: " + startLevel);
+      
       this.startLevel = startLevel;
    }
 
+   @Override
    public boolean isAutoStart()
    {
       return autoStart;
    }
 
+   @Override
    public void setAutoStart(boolean autoStart)
    {
       this.autoStart = autoStart;
    }
 
+   @Override
    public boolean isBundleUpdate()
    {
       return update;
    }
 
+   @Override
    public void setBundleUpdate(boolean update)
    {
       this.update = update;
