@@ -101,9 +101,10 @@ public class SystemDeployerService extends AbstractDeployerService
          Bundle bundle = entry.getValue();
 
          StartLevel startLevel = getStartLevel();
-         if (dep.getStartLevel() > 0)
+         Integer level = dep.getStartLevel();
+         if (level != null && level > 0)
          {
-            startLevel.setBundleStartLevel(bundle, dep.getStartLevel());
+            startLevel.setBundleStartLevel(bundle, level);
          }
 
          if (dep.isAutoStart())
