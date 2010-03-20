@@ -62,12 +62,6 @@
       <version>${version.osgi}</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.compendium</artifactId>
-      <version>${version.osgi}</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!-- Test Dependecies -->
     <dependency>
