@@ -16,7 +16,7 @@
 
   <name>JBossOSGi Reactor - Deployment</name>
 
-  <groupId>org.jboss.osgi.runtime</groupId>
+  <groupId>org.jboss.osgi.deployment</groupId>
   <artifactId>jboss-osgi-deployment</artifactId>
   <packaging>jar</packaging>
 
