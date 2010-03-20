@@ -42,7 +42,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * A {@link DeployerService} that installs/uninstalls the bundles directly on the OSGi framework.
@@ -56,7 +55,6 @@ public class SystemDeployerService extends AbstractDeployerService
    private static final Logger log = Logger.getLogger(SystemDeployerService.class);
 
    private BundleContext context;
-   private ServiceTracker startLevelTracker;
 
    public SystemDeployerService(BundleContext context)
    {
@@ -188,11 +186,7 @@ public class SystemDeployerService extends AbstractDeployerService
 
    private StartLevel getStartLevel()
    {
-      if (startLevelTracker == null)
-      {
-         startLevelTracker = new ServiceTracker(context, StartLevel.class.getName(), null);
-         startLevelTracker.open();
-      }
-      return (StartLevel)startLevelTracker.getService();
+      ServiceReference sref = context.getServiceReference(StartLevel.class.getName());
+      return sref != null ? (StartLevel)context.getService(sref) : null;
    }
 }

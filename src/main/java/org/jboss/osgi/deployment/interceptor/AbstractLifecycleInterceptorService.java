@@ -35,8 +35,11 @@ import org.jboss.osgi.deployment.internal.InterceptorWrapper;
 import org.jboss.osgi.spi.util.ConstantsHelper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * A basic service that manages bundle lifecycle interceptors.
@@ -44,48 +47,53 @@ import org.osgi.util.tracker.ServiceTracker;
  * @author thomas.diesler@jboss.com
  * @since 15-Oct-2009
  */
-public abstract class AbstractLifecycleInterceptorService implements LifecycleInterceptorService 
+public abstract class AbstractLifecycleInterceptorService implements LifecycleInterceptorService, ServiceListener
 {
    // Provide logging
    private static final Logger log = Logger.getLogger(AbstractLifecycleInterceptorService.class);
 
    // The system bundle context
    private BundleContext context;
-   
+
    // The interceptor chain
    private List<LifecycleInterceptor> interceptorChain = new ArrayList<LifecycleInterceptor>();
-   
+
    protected AbstractLifecycleInterceptorService(BundleContext context)
    {
       if (context == null)
          throw new IllegalStateException("Null context");
       this.context = context;
-      
-      // Track the LifecycleInterceptor services
-      ServiceTracker tracker = new ServiceTracker(context, LifecycleInterceptor.class.getName(), null)
-      {
-         @Override
-         public Object addingService(ServiceReference reference)
-         {
-            LifecycleInterceptor interceptor = (LifecycleInterceptor)super.addingService(reference);
-            addInterceptor(interceptor);
-            return interceptor;
-         }
 
-         @Override
-         public void removedService(ServiceReference reference, Object service)
-         {
-            super.removedService(reference, service);
-            LifecycleInterceptor interceptor = (LifecycleInterceptor)service;
-            removeInterceptor(interceptor);
-         }
-      };
-      tracker.open();
+      String filter = "(" + Constants.OBJECTCLASS + "=" + LifecycleInterceptor.class.getName() + ")";
+      try
+      {
+         context.addServiceListener(this, filter);
+      }
+      catch (InvalidSyntaxException ex)
+      {
+         // ignore
+      }
    }
-   
+
    public BundleContext getSystemContext()
    {
       return context;
+   }
+
+   @Override
+   public void serviceChanged(ServiceEvent event)
+   {
+      ServiceReference reference = event.getServiceReference();
+      LifecycleInterceptor interceptor = (LifecycleInterceptor)context.getService(reference);
+      switch (event.getType())
+      {
+         case ServiceEvent.REGISTERED:
+            addInterceptor(interceptor);
+            break;
+         case ServiceEvent.UNREGISTERING:
+            removeInterceptor(interceptor);
+            break;
+      }
    }
 
    /**
@@ -100,20 +108,20 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
    {
       if (interceptor == null)
          throw new IllegalArgumentException("Null interceptor");
-      
+
       log.debug("Add interceptor: " + new InterceptorWrapper(interceptor));
-      
+
       synchronized (interceptorChain)
       {
          Set<LifecycleInterceptor> unsortedSet = new HashSet<LifecycleInterceptor>();
          unsortedSet.addAll(interceptorChain);
          unsortedSet.add(interceptor);
-         
+
          List<LifecycleInterceptor> sortedList = new ArrayList<LifecycleInterceptor>();
-         
+
          // Add interceptors with no inputs first 
          Iterator<LifecycleInterceptor> itUnsorted = unsortedSet.iterator();
-         while(itUnsorted.hasNext())
+         while (itUnsorted.hasNext())
          {
             LifecycleInterceptor aux = itUnsorted.next();
             if (aux.getInput() == null)
@@ -131,16 +139,16 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
             if (auxOutput != null)
                providedOutputs.addAll(auxOutput);
          }
-         
+
          // Add interceptors with sattisfied inputs 
          itUnsorted = unsortedSet.iterator();
-         while(itUnsorted.hasNext())
+         while (itUnsorted.hasNext())
          {
             LifecycleInterceptor aux = itUnsorted.next();
             Set<Class<?>> input = aux.getInput();
             if (input == null)
                throw new IllegalStateException("Interceptor with no inputs should have been added already");
-            
+
             if (providedOutputs.containsAll(input))
             {
                addWithRelativeOrder(sortedList, aux);
@@ -153,7 +161,7 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
          {
             addWithRelativeOrder(sortedList, aux);
          }
-         
+
          // Log the interceptor order
          StringBuffer buffer = new StringBuffer();
          for (LifecycleInterceptor aux : sortedList)
@@ -162,7 +170,7 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
             buffer.append("\n  " + wrapper.toLongString());
          }
          log.debug("Resulting interceptor chain" + buffer.toString());
-         
+
          // Use the sorted result as the new interceptor chain
          interceptorChain.clear();
          interceptorChain.addAll(sortedList);
@@ -174,12 +182,12 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
       Set<Class<?>> providedOutputs = new HashSet<Class<?>>();
       int relOrder = interceptor.getRelativeOrder();
       Set<Class<?>> input = interceptor.getInput();
-      
+
       for (int i = 0; i < sortedList.size(); i++)
       {
          LifecycleInterceptor aux = sortedList.get(i);
          int auxOrder = aux.getRelativeOrder();
-         
+
          // Add if all inputs are satisfied and the rel order is less or equal
          boolean inputsProvided = (input == null || providedOutputs.containsAll(input));
          if (inputsProvided && relOrder <= auxOrder)
@@ -193,11 +201,11 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
          if (auxOutput != null)
             providedOutputs.addAll(auxOutput);
       }
-      
+
       // If not added yet, add at end
       sortedList.add(interceptor);
    }
-   
+
    /**
     * Remove an LifecycleInterceptor to the service.
     * 
@@ -207,9 +215,9 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
    {
       if (interceptor == null)
          throw new IllegalArgumentException("Null interceptor");
-      
+
       log.debug("Remove interceptor: " + new InterceptorWrapper(interceptor));
-      
+
       synchronized (interceptorChain)
       {
          interceptorChain.remove(interceptor);
@@ -238,16 +246,16 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
          // Nothing to do
          if (interceptorChain.size() == 0)
             return;
-         
+
          InvocationContext inv = getInvocationContext(bundle);
          if (inv == null)
             throw new IllegalStateException("Cannot get invocation context for: " + bundle);
-         
+
          // Call the interceptor chain
          for (LifecycleInterceptor aux : interceptorChain)
          {
             Set<Class<?>> input = aux.getInput();
-            
+
             boolean doInvocation = true;
             if (input != null)
             {
@@ -261,7 +269,7 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
                   }
                }
             }
-            
+
             if (doInvocation == true)
             {
                InterceptorWrapper wrapper = new InterceptorWrapper(aux);
