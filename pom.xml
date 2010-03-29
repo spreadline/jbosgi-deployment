@@ -20,26 +20,26 @@
   <artifactId>jboss-osgi-deployment</artifactId>
   <packaging>jar</packaging>
 
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
 
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
   </parent>
 
   <!-- Subversion -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/tags/jboss-osgi-deployment-1.0.2</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/tags/jboss-osgi-deployment-1.0.2</developerConnection>
+    <url>http://fisheye.jboss.com/qsearch/JBossOSGi/tags/jboss-osgi-deployment-1.0.2</url>
   </scm>
   
   <!-- Properties -->
   <properties>
-    <version.jboss.osgi.spi>1.0.5-SNAPSHOT</version.jboss.osgi.spi>
-    <version.jboss.osgi.vfs>1.0.0-SNAPSHOT</version.jboss.osgi.vfs>
+    <version.jboss.osgi.spi>1.0.5</version.jboss.osgi.spi>
+    <version.jboss.osgi.vfs>1.0.0</version.jboss.osgi.vfs>
     <version.osgi>4.2.0</version.osgi>
   </properties>
 
