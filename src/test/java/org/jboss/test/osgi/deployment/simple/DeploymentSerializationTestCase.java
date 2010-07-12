@@ -28,13 +28,19 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.jboss.osgi.deployment.deployer.Deployment;
 import org.jboss.osgi.deployment.internal.DeploymentImpl;
 import org.jboss.osgi.spi.util.BundleInfo;
+import org.jboss.osgi.testing.OSGiManifestBuilder;
+import org.jboss.osgi.testing.OSGiTestHelper;
+import org.jboss.osgi.vfs.VirtualFile;
+import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
 /**
@@ -84,10 +90,23 @@ public class DeploymentSerializationTestCase
 
    private BundleInfo getBundleInfo() throws Exception
    {
-      File file = new File("target/test-libs/simple-bundle.jar");
-      assertTrue("File exists: " + file, file.exists());
+      // Bundle-Version: 1.0.0
+      // Bundle-SymbolicName: simple-bundle
+      final JavaArchive archive = ShrinkWrap.create("simple-bundle", JavaArchive.class);
+      archive.setManifest(new Asset()
+      {
+         public InputStream openStream()
+         {
+            OSGiManifestBuilder builder = OSGiManifestBuilder.newInstance();
+            builder.addBundleManifestVersion(2);
+            builder.addBundleSymbolicName(archive.getName());
+            builder.addBundleVersion("1.0.0");
+            return builder.openStream();
+         }
+      });
       
-      BundleInfo info = BundleInfo.createBundleInfo(file.toURI().toURL());
+      VirtualFile rootFile = OSGiTestHelper.toVirtualFile(archive);
+      BundleInfo info = BundleInfo.createBundleInfo(rootFile);
       return info;
    }
 }

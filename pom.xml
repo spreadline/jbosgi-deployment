@@ -26,29 +26,25 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.7-SNAPSHOT</version>
   </parent>
 
-  <!-- Subversion -->
+  <!-- Source Control -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/runtime/deployment/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
+    <connection>scm:git:git://github.com/jbosgi/jbosgi-deployment.git</connection>
+    <developerConnection>scm:git:git@github.com:jbosgi/jbosgi-deployment.git</developerConnection>
+    <url>http://github.com/jbosgi/jbosgi-deployment</url>
   </scm>
   
   <!-- Properties -->
   <properties>
-    <version.jboss.osgi.spi>1.0.5</version.jboss.osgi.spi>
-    <version.jboss.osgi.vfs>1.0.0</version.jboss.osgi.vfs>
+    <version.jboss.osgi.spi>1.0.9-SNAPSHOT</version.jboss.osgi.spi>
+    <version.jboss.osgi.vfs>1.0.1-SNAPSHOT</version.jboss.osgi.vfs>
     <version.osgi>4.2.0</version.osgi>
   </properties>
 
   <!-- Dependencies -->
   <dependencies>
-    <dependency>
-      <groupId>biz.aQute</groupId>
-      <artifactId>bnd</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.jboss.osgi</groupId>
       <artifactId>jboss-osgi-spi</artifactId>
@@ -66,7 +62,7 @@
     <!-- Test Dependecies -->
     <dependency>
       <groupId>org.jboss.osgi.vfs</groupId>
-      <artifactId>jboss-osgi-vfs21</artifactId>
+      <artifactId>jboss-osgi-vfs30</artifactId>
       <version>${version.jboss.osgi.vfs}</version>
       <scope>test</scope>
     </dependency>
@@ -80,48 +76,6 @@
   <!-- Build -->
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-artifacts</id>
-            <phase>package</phase>
-            <goals>
-              <goal>attach-artifact</goal>
-            </goals>
-            <configuration>
-              <artifacts>
-                <artifact>
-                  <!-- For some reason the distribution javadoc module needs this -->
-                  <file>target/${artifactId}-${version}-sources.jar</file>
-                  <classifier>sources</classifier>
-                  <type>jar</type>
-                </artifact>
-              </artifacts>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>build-test-jars</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <property name="maven.runtime.classpath" refid="maven.runtime.classpath" />
-                <property name="tests.output.dir" value="${project.build.directory}" />
-                <ant antfile="scripts/antrun-test-jars.xml" />
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
