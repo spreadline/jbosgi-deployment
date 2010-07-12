@@ -23,12 +23,11 @@ package org.jboss.osgi.deployment.deployer;
 
 //$Id$
 
-import java.net.URL;
-
 import org.jboss.osgi.deployment.internal.DeploymentImpl;
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.osgi.vfs.VirtualFile;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.Version;
 
 /**
  * A deployment factory.
@@ -43,20 +42,15 @@ public class DeploymentFactory
    {
    }
    
-   public static Deployment createDeployment(URL url) throws BundleException
+   public static Deployment createDeployment(VirtualFile rootFile, String location, String symbolicName, Version version)
    {
-      BundleInfo info = BundleInfo.createBundleInfo(url);
-      return new DeploymentImpl(info);
-   }
-   
-   public static Deployment createDeployment(VirtualFile file) throws BundleException
-   {
-      BundleInfo info = BundleInfo.createBundleInfo(file);
-      return new DeploymentImpl(info);
+      return new DeploymentImpl(rootFile, location, symbolicName, version);
    }
    
    public static Deployment createDeployment(BundleInfo info) throws BundleException
    {
-      return new DeploymentImpl(info);
+      if (info == null)
+         throw new IllegalArgumentException("Null info");
+      return new DeploymentImpl(info.getRoot(), info.getLocation(), info.getSymbolicName(), info.getVersion());
    }
 }

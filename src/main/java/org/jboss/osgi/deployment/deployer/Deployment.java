@@ -23,6 +23,8 @@ package org.jboss.osgi.deployment.deployer;
 
 //$Id$
 
+import java.io.IOException;
+
 import org.jboss.osgi.spi.Attachments;
 import org.jboss.osgi.vfs.VirtualFile;
 
@@ -57,7 +59,7 @@ public interface Deployment extends Attachments
    /**
     * Get the manifest header for the given key.
     */
-   String getManifestHeader(String key);
+   String getManifestHeader(String key) throws IOException;
    
    /**
     * Get the start level associated with this deployment

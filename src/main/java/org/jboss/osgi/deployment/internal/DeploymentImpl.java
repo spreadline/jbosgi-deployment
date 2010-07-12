@@ -21,14 +21,19 @@
  */
 package org.jboss.osgi.deployment.internal;
 
-//$Id$
-
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import org.jboss.osgi.deployment.deployer.Deployment;
 import org.jboss.osgi.spi.util.AttachmentSupport;
-import org.jboss.osgi.spi.util.BundleInfo;
+import org.jboss.osgi.vfs.AbstractVFS;
+import org.jboss.osgi.vfs.VFSUtils;
 import org.jboss.osgi.vfs.VirtualFile;
+import org.osgi.framework.Version;
+
 
 /**
  * An abstraction of a bundle deployment
@@ -40,47 +45,96 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
 {
    private static final long serialVersionUID = 6216977125749367927L;
    
-   private BundleInfo info;
+   private transient VirtualFile rootFile;
+   private URL rootURL;
+   private Manifest manifest;
+   private String location;
+   private String symbolicName;
+   private String version;
    private Integer startLevel;
    private boolean autoStart;
    private boolean update;
 
-   public DeploymentImpl(BundleInfo info)
+   public DeploymentImpl(VirtualFile rootFile, String location, String symbolicName, Version version)
    {
-      if (info == null)
-         throw new IllegalArgumentException("Bundle info cannot be null");
+      if (rootFile == null)
+         throw new IllegalArgumentException("Null rootFile");
       
-      this.info = info;
+      if (location == null)
+         location = rootFile.getPathName();
+      if (symbolicName == null)
+         symbolicName = rootFile.getName();
+      if (version == null)
+         version = Version.emptyVersion;
+      
+      this.rootFile = rootFile;
+      this.location = location;
+      this.symbolicName = symbolicName;
+      this.version = version.toString();
+      
+      try
+      {
+         this.rootURL = rootFile.toURL();
+      }
+      catch (IOException ex)
+      {
+         throw new IllegalStateException("Cannot obtain root URL", ex);
+      }
    }
    
    @Override
    public VirtualFile getRoot()
    {
-      return info.getRoot();
+      if (rootFile == null)
+      {
+         try
+         {
+            rootFile = AbstractVFS.getRoot(rootURL);
+         }
+         catch (IOException ex)
+         {
+            throw new IllegalStateException("Cannot obtain rootFile", ex);
+         }
+      }
+      return rootFile;
    }
 
    @Override
    public String getLocation()
    {
-      return info.getLocation();
+      return location;
    }
 
    @Override
    public String getSymbolicName()
    {
-      return info.getSymbolicName();
+      return symbolicName;
    }
 
    @Override
    public String getVersion()
    {
-      return info.getVersion().toString();
+      return version;
    }
 
    @Override
-   public String getManifestHeader(String key)
+   public String getManifestHeader(String key) throws IOException
    {
-      return info.getManifestHeader(key);
+      if (manifest == null)
+      {
+         try
+         {
+            manifest = VFSUtils.getManifest(getRoot());
+            if (manifest == null)
+               throw new IOException("Cannot get manifest from: " + getRoot());
+         }
+         catch (IOException ex)
+         {
+            throw new IOException("Cannot get manifest from: " + getRoot(), ex);
+         }
+      }
+      Attributes atts = manifest.getMainAttributes();
+      return atts.getValue(key);
    }
    
    @Override
@@ -129,7 +183,10 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
          return false;
       
       DeploymentImpl other = (DeploymentImpl)obj;
-      return info.equals(other.info);
+      boolean matchLocation = getLocation().equals(other.getLocation());
+      boolean matchName = getSymbolicName().equals(other.getSymbolicName());
+      boolean matchVersion = getVersion().equals(other.getVersion());
+      return matchLocation && matchName && matchVersion;
    }
 
    @Override
@@ -143,7 +200,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    {
       String symbolicName = getSymbolicName();
       String version = getVersion();
-      String url = info.getLocation();
-      return "[" + symbolicName + "-" + version + ",url=" + url + "]";
+      String location = getLocation();
+      return "[" + symbolicName + "-" + version + ",location=" + location + "]";
    }
 }

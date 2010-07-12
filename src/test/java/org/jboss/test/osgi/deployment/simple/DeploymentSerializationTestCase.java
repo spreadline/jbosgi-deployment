@@ -33,7 +33,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.jboss.osgi.deployment.deployer.Deployment;
-import org.jboss.osgi.deployment.internal.DeploymentImpl;
+import org.jboss.osgi.deployment.deployer.DeploymentFactory;
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.osgi.testing.OSGiManifestBuilder;
 import org.jboss.osgi.testing.OSGiTestHelper;
@@ -73,7 +73,7 @@ public class DeploymentSerializationTestCase
    public void testSerializeDeployment() throws Exception
    {
       BundleInfo info = getBundleInfo();
-      Deployment dep = new DeploymentImpl(info);
+      Deployment dep = DeploymentFactory.createDeployment(info);
       
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -82,9 +82,11 @@ public class DeploymentSerializationTestCase
       
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       ObjectInputStream ois = new ObjectInputStream(bais);
-      Object res = ois.readObject();
-      assertTrue("Instance of Deployment: " + res, res instanceof Deployment);
+      Deployment res = (Deployment)ois.readObject();
       
+      assertEquals(dep.getLocation(), res.getLocation());
+      assertEquals(dep.getSymbolicName(), res.getSymbolicName());
+      assertEquals(dep.getVersion(), res.getVersion());
       assertEquals(dep, res);
    }
 
