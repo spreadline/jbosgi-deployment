@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.osgi.deployment.internal;
+package org.jboss.osgi.deployment.deployer;
 
 //$Id: SystemDeployerService.java 90894 2009-07-07 11:58:40Z thomas.diesler@jboss.com $
 
@@ -29,26 +29,23 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.jboss.logging.Logger;
-import org.jboss.osgi.deployment.deployer.DeployerService;
-import org.jboss.osgi.deployment.deployer.Deployment;
-import org.jboss.osgi.deployment.deployer.DeploymentRegistryService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 
 /**
- * A {@link DeployerService} that installs/uninstalls the bundles directly on the OSGi framework without going through the MC registered deployers.
+ * A Service to register/unregister bundle deployments.
  * 
  * @author thomas.diesler@jboss.com
  * @since 27-May-2009
  */
-public class DeploymentRegistryServiceImpl implements DeploymentRegistryService
+public class DefaultDeploymentRegistryService implements DeploymentRegistryService
 {
    // Provide logging
-   private static final Logger log = Logger.getLogger(DeploymentRegistryServiceImpl.class);
+   private static final Logger log = Logger.getLogger(DefaultDeploymentRegistryService.class);
    
    private List<Deployment> deployments = new CopyOnWriteArrayList<Deployment>();
 
-   public DeploymentRegistryServiceImpl(BundleContext context)
+   public DefaultDeploymentRegistryService(BundleContext context)
    {
    }
 

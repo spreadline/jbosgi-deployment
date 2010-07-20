@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.osgi.deployment.internal;
+package org.jboss.osgi.deployment.deployer;
 
 //$Id$
 
@@ -30,9 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jboss.logging.Logger;
-import org.jboss.osgi.deployment.deployer.DeployerService;
-import org.jboss.osgi.deployment.deployer.Deployment;
-import org.jboss.osgi.deployment.deployer.DeploymentRegistryService;
 import org.jboss.osgi.spi.util.ExportedPackageHelper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
