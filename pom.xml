@@ -20,7 +20,7 @@
   <artifactId>jboss-osgi-deployment</artifactId>
   <packaging>jar</packaging>
 
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
 
   <!-- Parent -->
   <parent>
