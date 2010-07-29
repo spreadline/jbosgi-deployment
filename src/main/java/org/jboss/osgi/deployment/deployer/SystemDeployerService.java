@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jboss.logging.Logger;
-import org.jboss.osgi.spi.util.ExportedPackageHelper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -115,9 +114,6 @@ public class SystemDeployerService implements DeployerService
                   // bundle.start(Bundle.START_ACTIVATION_POLICY);
 
                   bundle.start();
-
-                  ExportedPackageHelper packageHelper = new ExportedPackageHelper(context);
-                  packageHelper.logExportedPackages(bundle);
                }
                catch (BundleException ex)
                {
