@@ -23,9 +23,7 @@ package org.jboss.osgi.deployment.deployer;
 
 //$Id$
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -35,7 +33,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
-import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
 /**
@@ -50,41 +47,38 @@ public class SystemDeployerService implements DeployerService
    private static final Logger log = Logger.getLogger(SystemDeployerService.class);
 
    private BundleContext context;
+   private DeploymentRegistryService registry;
 
    public SystemDeployerService(BundleContext context)
    {
+      if (context == null)
+         throw new IllegalArgumentException("Null context");
+
       this.context = context;
    }
 
+   @Override
+   public Bundle deploy(Deployment dep) throws BundleException
+   {
+      Bundle bundle = installBundle(dep);
+      return bundle;
+   }
+
+   @Override
+   public Bundle undeploy(Deployment dep) throws BundleException
+   {
+      Bundle bundle = uninstallBundle(dep);
+      return bundle;
+   }
+
+   @Override
    public void deploy(Deployment[] depArr) throws BundleException
    {
-      DeploymentRegistryService registry = getDeploymentRegistry();
-
-      List<Bundle> resolvableBundles = new ArrayList<Bundle>();
       Map<Deployment, Bundle> bundleMap = new HashMap<Deployment, Bundle>();
-
       for (Deployment dep : depArr)
       {
-         log.debug("Install: " + dep.getLocation());
-
-         String location = dep.getLocation();
-         Bundle bundle = context.installBundle(location);
-
+         Bundle bundle = installBundle(dep);
          bundleMap.put(dep, bundle);
-         if (dep.isAutoStart())
-            resolvableBundles.add(bundle);
-
-         registry.registerDeployment(dep);
-      }
-
-      // Resolve the installed bundles through the PackageAdmin
-      ServiceReference packageAdminRef = context.getServiceReference(PackageAdmin.class.getName());
-      if (packageAdminRef != null && resolvableBundles.isEmpty() == false)
-      {
-         PackageAdmin packageAdmin = (PackageAdmin)context.getService(packageAdminRef);
-         Bundle[] resolvableBundleArr = new Bundle[resolvableBundles.size()];
-         resolvableBundles.toArray(resolvableBundleArr);
-         packageAdmin.resolveBundles(resolvableBundleArr);
       }
 
       // Start the installed bundles
@@ -92,58 +86,71 @@ public class SystemDeployerService implements DeployerService
       {
          Deployment dep = entry.getKey();
          Bundle bundle = entry.getValue();
-
-         StartLevel startLevel = getStartLevel();
-         Integer level = dep.getStartLevel();
-         if (level != null && level > 0)
-         {
-            startLevel.setBundleStartLevel(bundle, level);
-         }
-
          if (dep.isAutoStart())
          {
-            int state = bundle.getState();
-            if (state == Bundle.RESOLVED || packageAdminRef == null)
+            try
             {
-               try
-               {
-                  log.debug("Start: " + bundle);
+               log.debug("Start: " + bundle);
 
-                  // Added support for Bundle.START_ACTIVATION_POLICY on start
-                  // http://issues.apache.org/jira/browse/FELIX-1317
-                  // bundle.start(Bundle.START_ACTIVATION_POLICY);
+               // Added support for Bundle.START_ACTIVATION_POLICY on start
+               // http://issues.apache.org/jira/browse/FELIX-1317
+               // bundle.start(Bundle.START_ACTIVATION_POLICY);
 
-                  bundle.start();
-               }
-               catch (BundleException ex)
-               {
-                  log.error("Cannot start bundle: " + bundle, ex);
-               }
+               bundle.start();
+            }
+            catch (BundleException ex)
+            {
+               log.error("Cannot start bundle: " + bundle, ex);
             }
          }
       }
    }
 
+   @Override
    public void undeploy(Deployment[] depArr) throws BundleException
    {
-      DeploymentRegistryService registry = getDeploymentRegistry();
-
       for (Deployment dep : depArr)
       {
-         Bundle bundle = getBundle(dep);
-         if (bundle != null)
-         {
-            log.debug("Uninstall: " + bundle);
-
-            registry.unregisterDeployment(dep);
-
-            bundle.uninstall();
-         }
-         else
-         {
-            log.warn("Cannot obtain bundle for: " + dep);
-         }
+         uninstallBundle(dep);
       }
+   }
+
+   protected Bundle installBundleInternal(Deployment dep) throws BundleException
+   {
+      return context.installBundle(dep.getLocation());
+   }
+
+   private Bundle installBundle(Deployment dep) throws BundleException
+   {
+      log.debug("Install: " + dep.getLocation());
+      Bundle bundle = installBundleInternal(dep);
+
+      Integer level = dep.getStartLevel();
+      StartLevel startLevel = getStartLevel();
+      if (level != null && level > 0)
+         startLevel.setBundleStartLevel(bundle, level);
+
+      DeploymentRegistryService registry = getDeploymentRegistryService();
+      registry.registerDeployment(dep);
+
+      return bundle;
+   }
+
+   private Bundle uninstallBundle(Deployment dep) throws BundleException
+   {
+      Bundle bundle = getBundle(dep);
+      if (bundle != null)
+      {
+         log.debug("Uninstall: " + bundle);
+         DeploymentRegistryService registry = getDeploymentRegistryService();
+         registry.unregisterDeployment(dep);
+         bundle.uninstall();
+      }
+      else
+      {
+         log.warn("Cannot obtain bundle for: " + dep);
+      }
+      return bundle;
    }
 
    private Bundle getBundle(Deployment dep)
@@ -167,13 +174,16 @@ public class SystemDeployerService implements DeployerService
       return bundle;
    }
 
-   private DeploymentRegistryService getDeploymentRegistry()
+   private DeploymentRegistryService getDeploymentRegistryService()
    {
-      ServiceReference sref = context.getServiceReference(DeploymentRegistryService.class.getName());
-      if (sref == null)
-         throw new IllegalStateException("Cannot obtain DeploymentRegistryService");
-
-      return (DeploymentRegistryService)context.getService(sref);
+      if (registry == null)
+      {
+         ServiceReference sref = context.getServiceReference(DeploymentRegistryService.class.getName());
+         if (sref == null)
+            throw new IllegalStateException("Cannot obtain DeploymentRegistryService");
+         registry = (DeploymentRegistryService)context.getService(sref);
+      }
+      return registry;
    }
 
    private StartLevel getStartLevel()

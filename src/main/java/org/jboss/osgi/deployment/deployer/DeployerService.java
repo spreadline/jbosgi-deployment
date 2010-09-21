@@ -23,20 +23,31 @@ package org.jboss.osgi.deployment.deployer;
 
 //$Id$
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
 /**
  * A Service that can be used to deploy/undeploy bundles or archives to/from the runtime.
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 23-Jan-2009
  */
 public interface DeployerService
 {
    /**
+    * Deploy a bundle
+    */
+   Bundle deploy(Deployment bundleDep) throws BundleException;
+
+   /**
     * Deploy an array of bundles
     */
    void deploy(Deployment[] bundleDeps) throws BundleException;
+
+   /**
+    * Undeploy a bundle
+    */
+   Bundle undeploy(Deployment bundleDep) throws BundleException;
 
    /**
     * Undeploy an array of bundles
