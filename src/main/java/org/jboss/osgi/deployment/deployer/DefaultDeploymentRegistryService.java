@@ -34,7 +34,7 @@ import org.osgi.framework.Version;
 
 /**
  * A Service to register/unregister bundle deployments.
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 27-May-2009
  */
@@ -42,7 +42,7 @@ public class DefaultDeploymentRegistryService implements DeploymentRegistryServi
 {
    // Provide logging
    private static final Logger log = Logger.getLogger(DefaultDeploymentRegistryService.class);
-   
+
    private List<Deployment> deployments = new CopyOnWriteArrayList<Deployment>();
 
    public DefaultDeploymentRegistryService(BundleContext context)
@@ -65,7 +65,7 @@ public class DefaultDeploymentRegistryService implements DeploymentRegistryServi
       log.debug("Unregister: " + dep);
       deployments.remove(dep);
    }
-   
+
    public Deployment getDeployment(String symbolicName, Version version)
    {
       if (symbolicName == null)
@@ -75,7 +75,7 @@ public class DefaultDeploymentRegistryService implements DeploymentRegistryServi
       for (Deployment auxDep : deployments)
       {
          String auxName = auxDep.getSymbolicName();
-         String auxVersion = auxDep.getVersion();
+         Version auxVersion = Version.parseVersion(auxDep.getVersion());
          if (symbolicName.equals(auxName) && version.equals(auxVersion))
          {
             dep = auxDep;

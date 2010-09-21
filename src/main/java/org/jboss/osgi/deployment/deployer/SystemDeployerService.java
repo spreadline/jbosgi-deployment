@@ -40,7 +40,7 @@ import org.osgi.service.startlevel.StartLevel;
 
 /**
  * A {@link DeployerService} that installs/uninstalls the bundles directly on the OSGi framework.
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 27-May-2009
  */

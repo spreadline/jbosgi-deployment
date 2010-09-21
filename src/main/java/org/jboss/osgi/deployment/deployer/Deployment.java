@@ -30,7 +30,7 @@ import org.jboss.osgi.vfs.VirtualFile;
 
 /**
  * An abstraction of a bundle deployment
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 27-May-2009
  */
@@ -40,7 +40,7 @@ public interface Deployment extends Attachments
     * Get the root virtual file
     */
    VirtualFile getRoot();
-   
+
    /**
     * Get the bundle location
     */
@@ -53,6 +53,9 @@ public interface Deployment extends Attachments
 
    /**
     * Get the bundle version
+    *
+    * Consider making Version serializable
+    * https://www.osgi.org/members/bugzilla/show_bug.cgi?id=1744
     */
    String getVersion();
 
@@ -60,7 +63,7 @@ public interface Deployment extends Attachments
     * Get the manifest header for the given key.
     */
    String getManifestHeader(String key) throws IOException;
-   
+
    /**
     * Get the start level associated with this deployment
     */

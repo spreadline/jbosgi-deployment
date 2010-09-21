@@ -37,14 +37,14 @@ import org.osgi.framework.Version;
 
 /**
  * An abstraction of a bundle deployment
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 27-May-2009
  */
 public class DeploymentImpl extends AttachmentSupport implements Deployment, Serializable
 {
    private static final long serialVersionUID = 6216977125749367927L;
-   
+
    private transient VirtualFile rootFile;
    private URL rootURL;
    private Manifest manifest;
@@ -59,19 +59,19 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    {
       if (rootFile == null)
          throw new IllegalArgumentException("Null rootFile");
-      
+
       if (location == null)
          location = rootFile.getPathName();
       if (symbolicName == null)
          symbolicName = rootFile.getName();
       if (version == null)
          version = Version.emptyVersion;
-      
+
       this.rootFile = rootFile;
       this.location = location;
       this.symbolicName = symbolicName;
       this.version = version.toString();
-      
+
       try
       {
          this.rootURL = rootFile.toURL();
@@ -81,7 +81,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
          throw new IllegalStateException("Cannot obtain root URL", ex);
       }
    }
-   
+
    @Override
    public VirtualFile getRoot()
    {
@@ -136,7 +136,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
       Attributes atts = manifest.getMainAttributes();
       return atts.getValue(key);
    }
-   
+
    @Override
    public Integer getStartLevel()
    {
@@ -148,7 +148,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    {
       if (startLevel == null || startLevel < 1)
          throw new IllegalArgumentException("Start level must be greater than one: " + startLevel);
-      
+
       this.startLevel = startLevel;
    }
 
@@ -181,7 +181,7 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    {
       if (!(obj instanceof DeploymentImpl))
          return false;
-      
+
       DeploymentImpl other = (DeploymentImpl)obj;
       boolean matchLocation = getLocation().equals(other.getLocation());
       boolean matchName = getSymbolicName().equals(other.getSymbolicName());
