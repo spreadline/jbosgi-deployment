@@ -26,12 +26,11 @@ package org.jboss.osgi.deployment.deployer;
 import org.jboss.osgi.deployment.internal.DeploymentImpl;
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.osgi.vfs.VirtualFile;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.Version;
 
 /**
  * A deployment factory.
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 16-Oct-2009
  */
@@ -41,13 +40,13 @@ public class DeploymentFactory
    private DeploymentFactory()
    {
    }
-   
+
    public static Deployment createDeployment(VirtualFile rootFile, String location, String symbolicName, Version version)
    {
       return new DeploymentImpl(rootFile, location, symbolicName, version);
    }
-   
-   public static Deployment createDeployment(BundleInfo info) throws BundleException
+
+   public static Deployment createDeployment(BundleInfo info)
    {
       if (info == null)
          throw new IllegalArgumentException("Null info");
