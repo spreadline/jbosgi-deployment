@@ -21,17 +21,10 @@
  */
 package org.jboss.osgi.deployment.internal;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import org.jboss.osgi.deployment.deployer.Deployment;
 import org.jboss.osgi.spi.util.AttachmentSupport;
-import org.jboss.osgi.vfs.AbstractVFS;
-import org.jboss.osgi.vfs.VFSUtils;
-import org.jboss.osgi.vfs.VirtualFile;
 import org.osgi.framework.Version;
 
 
@@ -41,13 +34,10 @@ import org.osgi.framework.Version;
  * @author thomas.diesler@jboss.com
  * @since 27-May-2009
  */
-public class DeploymentImpl extends AttachmentSupport implements Deployment, Serializable
+public abstract class AbstractDeployment extends AttachmentSupport implements Deployment, Serializable
 {
-   private static final long serialVersionUID = 6216977125749367927L;
-
-   private transient VirtualFile rootFile;
-   private URL rootURL;
-   private Manifest manifest;
+   private static final long serialVersionUID = -3918766495938169718L;
+   
    private String location;
    private String symbolicName;
    private String version;
@@ -55,48 +45,19 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    private boolean autoStart;
    private boolean update;
 
-   public DeploymentImpl(VirtualFile rootFile, String location, String symbolicName, Version version)
+   public AbstractDeployment(String location, String symbolicName, Version version)
    {
-      if (rootFile == null)
-         throw new IllegalArgumentException("Null rootFile");
-
       if (location == null)
-         location = rootFile.getPathName();
+         throw new IllegalArgumentException("Null location");
       if (symbolicName == null)
-         symbolicName = rootFile.getName();
+         throw new IllegalArgumentException("Null symbolicName");
+
       if (version == null)
          version = Version.emptyVersion;
 
-      this.rootFile = rootFile;
       this.location = location;
       this.symbolicName = symbolicName;
       this.version = version.toString();
-
-      try
-      {
-         this.rootURL = rootFile.toURL();
-      }
-      catch (IOException ex)
-      {
-         throw new IllegalStateException("Cannot obtain root URL", ex);
-      }
-   }
-
-   @Override
-   public VirtualFile getRoot()
-   {
-      if (rootFile == null)
-      {
-         try
-         {
-            rootFile = AbstractVFS.getRoot(rootURL);
-         }
-         catch (IOException ex)
-         {
-            throw new IllegalStateException("Cannot obtain rootFile", ex);
-         }
-      }
-      return rootFile;
    }
 
    @Override
@@ -115,26 +76,6 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    public String getVersion()
    {
       return version;
-   }
-
-   @Override
-   public String getManifestHeader(String key) throws IOException
-   {
-      if (manifest == null)
-      {
-         try
-         {
-            manifest = VFSUtils.getManifest(getRoot());
-            if (manifest == null)
-               throw new IOException("Cannot get manifest from: " + getRoot());
-         }
-         catch (IOException ex)
-         {
-            throw new IOException("Cannot get manifest from: " + getRoot(), ex);
-         }
-      }
-      Attributes atts = manifest.getMainAttributes();
-      return atts.getValue(key);
    }
 
    @Override
@@ -179,10 +120,10 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
    @Override
    public boolean equals(Object obj)
    {
-      if (!(obj instanceof DeploymentImpl))
+      if (!(obj instanceof AbstractDeployment))
          return false;
 
-      DeploymentImpl other = (DeploymentImpl)obj;
+      AbstractDeployment other = (AbstractDeployment)obj;
       boolean matchLocation = getLocation().equals(other.getLocation());
       boolean matchName = getSymbolicName().equals(other.getSymbolicName());
       boolean matchVersion = getVersion().equals(other.getVersion());
@@ -201,6 +142,6 @@ public class DeploymentImpl extends AttachmentSupport implements Deployment, Ser
       String symbolicName = getSymbolicName();
       String version = getVersion();
       String location = getLocation();
-      return "[" + symbolicName + "-" + version + ",location=" + location + "]";
+      return "[" + symbolicName + ":" + version + ",location=" + location + "]";
    }
 }

@@ -50,8 +50,6 @@ public class InvocationContextImpl implements InvocationContext
          throw new IllegalArgumentException("Null system context");
       if (bundle == null)
          throw new IllegalArgumentException("Null bundle");
-      if (root == null)
-         throw new IllegalArgumentException("Null root file");
       if (attachments == null)
          throw new IllegalArgumentException("Null attachments");
 

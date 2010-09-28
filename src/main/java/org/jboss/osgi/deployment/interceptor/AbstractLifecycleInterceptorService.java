@@ -109,7 +109,7 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
       if (interceptor == null)
          throw new IllegalArgumentException("Null interceptor");
 
-      log.debug("Add interceptor: " + new InterceptorWrapper(interceptor));
+      log.debugf("Add interceptor: %s", new InterceptorWrapper(interceptor));
 
       synchronized (interceptorChain)
       {
@@ -163,13 +163,16 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
          }
 
          // Log the interceptor order
-         StringBuffer buffer = new StringBuffer();
-         for (LifecycleInterceptor aux : sortedList)
+         if (log.isTraceEnabled())
          {
-            InterceptorWrapper wrapper = new InterceptorWrapper(aux);
-            buffer.append("\n  " + wrapper.toLongString());
+            StringBuffer buffer = new StringBuffer();
+            for (LifecycleInterceptor aux : sortedList)
+            {
+               InterceptorWrapper wrapper = new InterceptorWrapper(aux);
+               buffer.append("\n  " + wrapper.toLongString());
+            }
+            log.tracef("Resulting interceptor chain %s", buffer);
          }
-         log.debug("Resulting interceptor chain" + buffer.toString());
 
          // Use the sorted result as the new interceptor chain
          interceptorChain.clear();
@@ -216,7 +219,7 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
       if (interceptor == null)
          throw new IllegalArgumentException("Null interceptor");
 
-      log.debug("Remove interceptor: " + new InterceptorWrapper(interceptor));
+      log.debugf("Remove interceptor: %s", new InterceptorWrapper(interceptor));
 
       synchronized (interceptorChain)
       {
@@ -275,7 +278,7 @@ public abstract class AbstractLifecycleInterceptorService implements LifecycleIn
                InterceptorWrapper wrapper = new InterceptorWrapper(aux);
                String stateName = ConstantsHelper.bundleState(state);
                String location = inv.getBundle().getLocation();
-               log.trace("Invoke: " + wrapper + " with state " + stateName + " on " + location);
+               log.tracef("Invoke: %s with state %s on %s", wrapper, stateName, location);
                aux.invoke(state, inv);
             }
          }

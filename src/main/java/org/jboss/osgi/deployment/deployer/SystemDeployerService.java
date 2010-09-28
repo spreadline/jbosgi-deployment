@@ -90,7 +90,7 @@ public class SystemDeployerService implements DeployerService
          {
             try
             {
-               log.debug("Start: " + bundle);
+               log.debugf("Start: %s", bundle);
 
                // Added support for Bundle.START_ACTIVATION_POLICY on start
                // http://issues.apache.org/jira/browse/FELIX-1317
@@ -100,7 +100,7 @@ public class SystemDeployerService implements DeployerService
             }
             catch (BundleException ex)
             {
-               log.error("Cannot start bundle: " + bundle, ex);
+               log.errorf(ex, "Cannot start bundle: %s", bundle);
             }
          }
       }
@@ -122,7 +122,7 @@ public class SystemDeployerService implements DeployerService
 
    private Bundle installBundle(Deployment dep) throws BundleException
    {
-      log.debug("Install: " + dep.getLocation());
+      log.debugf("Install: %s", dep);
       Bundle bundle = installBundleInternal(dep);
 
       Integer level = dep.getStartLevel();
@@ -141,14 +141,14 @@ public class SystemDeployerService implements DeployerService
       Bundle bundle = getBundle(dep);
       if (bundle != null)
       {
-         log.debug("Uninstall: " + bundle);
+         log.debugf("Uninstall: %s", bundle);
          DeploymentRegistryService registry = getDeploymentRegistryService();
          registry.unregisterDeployment(dep);
          bundle.uninstall();
       }
       else
       {
-         log.warn("Cannot obtain bundle for: " + dep);
+         log.warnf("Cannot obtain bundle for: %s", dep);
       }
       return bundle;
    }

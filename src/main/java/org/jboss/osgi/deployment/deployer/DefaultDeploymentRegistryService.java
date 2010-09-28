@@ -56,13 +56,13 @@ public class DefaultDeploymentRegistryService implements DeploymentRegistryServi
 
    public void registerDeployment(Deployment dep)
    {
-      log.debug("Register: " + dep);
+      log.debugf("Register: %s", dep);
       deployments.add(dep);
    }
 
    public void unregisterDeployment(Deployment dep)
    {
-      log.debug("Unregister: " + dep);
+      log.debugf("Unregister: %s", dep);
       deployments.remove(dep);
    }
 

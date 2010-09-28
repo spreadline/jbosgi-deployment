@@ -23,7 +23,8 @@ package org.jboss.osgi.deployment.deployer;
 
 //$Id$
 
-import org.jboss.osgi.deployment.internal.DeploymentImpl;
+import org.jboss.osgi.deployment.internal.NullFileDeployment;
+import org.jboss.osgi.deployment.internal.VirtualFileDeployment;
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.osgi.vfs.VirtualFile;
 import org.osgi.framework.Version;
@@ -41,15 +42,29 @@ public class DeploymentFactory
    {
    }
 
-   public static Deployment createDeployment(VirtualFile rootFile, String location, String symbolicName, Version version)
-   {
-      return new DeploymentImpl(rootFile, location, symbolicName, version);
-   }
-
+   /**
+    * Create a deploymenmt from a {@link BundleInfo}
+    */
    public static Deployment createDeployment(BundleInfo info)
    {
       if (info == null)
          throw new IllegalArgumentException("Null info");
-      return new DeploymentImpl(info.getRoot(), info.getLocation(), info.getSymbolicName(), info.getVersion());
+      return new VirtualFileDeployment(info.getRoot(), info.getLocation(), info.getSymbolicName(), info.getVersion());
+   }
+
+   /**
+    * Create a deploymenmt that is based on a {@link VirtualFile}
+    */
+   public static Deployment createDeployment(VirtualFile rootFile, String location, String symbolicName, Version version)
+   {
+      return new VirtualFileDeployment(rootFile, location, symbolicName, version);
+   }
+
+   /**
+    * Create a generic deploymenmt.
+    */
+   public static Deployment createDeployment(String location, String symbolicName, Version version)
+   {
+      return new NullFileDeployment(location, symbolicName, version);
    }
 }
