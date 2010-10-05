@@ -38,7 +38,7 @@ import org.osgi.framework.Version;
 public class VirtualFileDeployment extends AbstractDeployment
 {
    private static final long serialVersionUID = -3331145101532992381L;
-   
+
    private transient VirtualFile rootFile;
    private URL rootURL;
 
@@ -66,7 +66,7 @@ public class VirtualFileDeployment extends AbstractDeployment
       {
          try
          {
-            rootFile = AbstractVFS.getRoot(rootURL);
+            rootFile = AbstractVFS.toVirtualFile(rootURL);
          }
          catch (IOException ex)
          {
