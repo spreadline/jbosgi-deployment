@@ -54,7 +54,7 @@ public class DeploymentServicesActivator
       // Register the SystemDeployerService
       Properties props = new Properties();
       props.put("provider", "system");
-      SystemDeployerService deployerService = new SystemDeployerService(context);
+      SystemDeployerService deployerService = new SystemDeployerService(context, registry);
       context.registerService(DeployerService.class.getName(), deployerService, props);
    }
 
