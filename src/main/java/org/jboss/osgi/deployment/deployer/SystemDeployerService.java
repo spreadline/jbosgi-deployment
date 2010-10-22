@@ -99,7 +99,7 @@ public class SystemDeployerService implements DeployerService
 
    private Bundle deployInternal(Deployment dep) throws BundleException
    {
-      log.debugf("Install: %s", dep);
+      log.debugf("Deploy: %s", dep);
       Bundle bundle = installBundle(dep);
       dep.addAttachment(Bundle.class, bundle);
 
@@ -128,6 +128,7 @@ public class SystemDeployerService implements DeployerService
    
    private Bundle undeployInternal(Deployment dep)
    {
+      log.debugf("Undeploy: %s", dep);
       Bundle bundle = dep.getAttachment(Bundle.class);
       if (bundle == null)
       {
@@ -135,11 +136,14 @@ public class SystemDeployerService implements DeployerService
          return null;
       }
 
-      log.debugf("Uninstall: %s", bundle);
       try
       {
          registry.unregisterDeployment(dep);
-         bundle.uninstall();
+         if (bundle.getState() != Bundle.UNINSTALLED)
+         {
+            log.debugf("Uninstall: %s", bundle);
+            bundle.uninstall();
+         }
       }
       catch (Throwable ex)
       {
