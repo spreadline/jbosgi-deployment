@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-//$Id$
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;

@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-//$Id$
 
 import org.jboss.osgi.deployment.internal.NullFileDeployment;
 import org.jboss.osgi.deployment.internal.VirtualFileDeployment;

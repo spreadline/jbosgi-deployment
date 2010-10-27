@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.interceptor;
 
-//$Id$
 
 import java.util.ArrayList;
 import java.util.Collections;

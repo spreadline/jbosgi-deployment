@@ -21,7 +21,6 @@
  */
 package org.jboss.test.osgi.deployment.interceptor;
 
-//$Id$
 
 import static org.jboss.osgi.deployment.interceptor.LifecycleInterceptor.RELATIVE_ORDER_DEFAULT;
 import static org.junit.Assert.assertEquals;

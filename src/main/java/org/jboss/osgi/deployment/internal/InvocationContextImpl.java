@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.internal;
 
-//$Id$
 
 import java.util.Collection;
 

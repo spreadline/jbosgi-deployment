@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-//$Id$
 
 import org.jboss.osgi.spi.Attachments;
 import org.jboss.osgi.vfs.VirtualFile;
