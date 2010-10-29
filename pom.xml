@@ -18,7 +18,7 @@
   <artifactId>jboss-osgi-deployment</artifactId>
   <packaging>jar</packaging>
 
-  <version>1.0.8</version>
+  <version>1.0.9-SNAPSHOT</version>
 
   <!-- Parent -->
   <parent>
