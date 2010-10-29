@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-//$Id$
 
 import org.jboss.logging.Logger;
 import org.osgi.framework.Bundle;

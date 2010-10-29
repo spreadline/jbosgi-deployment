@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment;
 
-//$Id$
 
 import java.util.Properties;
 

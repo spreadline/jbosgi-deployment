@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-//$Id: SystemDeployerService.java 90894 2009-07-07 11:58:40Z thomas.diesler@jboss.com $
 
 import java.net.URL;
 import java.util.Collections;

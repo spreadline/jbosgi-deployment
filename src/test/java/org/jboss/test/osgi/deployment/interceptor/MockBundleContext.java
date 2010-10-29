@@ -21,7 +21,6 @@
  */
 package org.jboss.test.osgi.deployment.interceptor;
 
-//$Id$
 
 import java.io.File;
 import java.io.InputStream;
