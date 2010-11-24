@@ -24,9 +24,7 @@ package org.jboss.osgi.deployment;
 
 import java.util.Properties;
 
-import org.jboss.osgi.deployment.deployer.DefaultDeploymentRegistryService;
 import org.jboss.osgi.deployment.deployer.DeployerService;
-import org.jboss.osgi.deployment.deployer.DeploymentRegistryService;
 import org.jboss.osgi.deployment.deployer.SystemDeployerService;
 import org.osgi.framework.BundleContext;
 
@@ -46,14 +44,10 @@ public class DeploymentServicesActivator
       if (context == null)
          throw new IllegalArgumentException("Null BundleContext");
 
-      // Register the DeploymentRegistryService
-      DeploymentRegistryService registry = new DefaultDeploymentRegistryService(context);
-      context.registerService(DeploymentRegistryService.class.getName(), registry, null);
-
       // Register the SystemDeployerService
       Properties props = new Properties();
       props.put("provider", "system");
-      SystemDeployerService deployerService = new SystemDeployerService(context, registry);
+      SystemDeployerService deployerService = new SystemDeployerService(context);
       context.registerService(DeployerService.class.getName(), deployerService, props);
    }
 

@@ -41,18 +41,14 @@ public class SystemDeployerService implements DeployerService
    private static final Logger log = Logger.getLogger(SystemDeployerService.class);
 
    private final BundleContext context;
-   private final DeploymentRegistryService registry;
    private final StartLevel startLevel;
 
-   public SystemDeployerService(BundleContext context, DeploymentRegistryService registry)
+   public SystemDeployerService(BundleContext context)
    {
       if (context == null)
          throw new IllegalArgumentException("Null context");
-      if (registry == null)
-         throw new IllegalArgumentException("Null registry");
 
       this.context = context;
-      this.registry = registry;
 
       ServiceReference sref = context.getServiceReference(StartLevel.class.getName());
       this.startLevel = sref != null ? (StartLevel)context.getService(sref) : null;
@@ -106,7 +102,6 @@ public class SystemDeployerService implements DeployerService
       if (startLevel != null && level != null && level > 0)
          startLevel.setBundleStartLevel(bundle, level);
 
-      registry.registerDeployment(dep);
       return bundle;
    }
 
@@ -137,7 +132,6 @@ public class SystemDeployerService implements DeployerService
 
       try
       {
-         registry.unregisterDeployment(dep);
          if (bundle.getState() != Bundle.UNINSTALLED)
          {
             log.debugf("Uninstall: %s", bundle);
