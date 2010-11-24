@@ -21,7 +21,6 @@
  */
 package org.jboss.osgi.deployment.deployer;
 
-
 import org.jboss.logging.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -87,11 +86,6 @@ public class SystemDeployerService implements DeployerService
          undeployInternal(dep);
    }
 
-   protected Bundle installBundle(Deployment dep) throws BundleException
-   {
-      return context.installBundle(dep.getLocation());
-   }
-
    private Bundle deployInternal(Deployment dep) throws BundleException
    {
       log.debugf("Deploy: %s", dep);
@@ -119,7 +113,7 @@ public class SystemDeployerService implements DeployerService
          bundle.start();
       }
    }
-   
+
    private Bundle undeployInternal(Deployment dep)
    {
       log.debugf("Undeploy: %s", dep);
@@ -135,7 +129,7 @@ public class SystemDeployerService implements DeployerService
          if (bundle.getState() != Bundle.UNINSTALLED)
          {
             log.debugf("Uninstall: %s", bundle);
-            bundle.uninstall();
+            uninstallBundle(dep, bundle);
          }
       }
       catch (Throwable ex)
@@ -143,5 +137,15 @@ public class SystemDeployerService implements DeployerService
          log.warnf(ex, "Cannot uninstall: %s", dep);
       }
       return bundle;
+   }
+
+   protected Bundle installBundle(Deployment dep) throws BundleException
+   {
+      return context.installBundle(dep.getLocation());
+   }
+
+   protected void uninstallBundle(Deployment dep, Bundle bundle) throws BundleException
+   {
+      bundle.uninstall();
    }
 }
