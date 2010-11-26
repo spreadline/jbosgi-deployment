@@ -36,7 +36,7 @@
   
   <!-- Properties -->
   <properties>
-    <version.jboss.osgi.spi>1.0.19-SNAPSHOT</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.19</version.jboss.osgi.spi>
     <version.jboss.osgi.vfs>1.0.4</version.jboss.osgi.vfs>
     <version.osgi>4.2.0</version.osgi>
   </properties>
