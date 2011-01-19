@@ -36,6 +36,7 @@ import org.jboss.osgi.deployment.deployer.DeploymentFactory;
 import org.jboss.osgi.spi.util.BundleInfo;
 import org.jboss.osgi.testing.OSGiManifestBuilder;
 import org.jboss.osgi.testing.OSGiTestHelper;
+import org.jboss.osgi.vfs.VFSUtils;
 import org.jboss.osgi.vfs.VirtualFile;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -106,8 +107,16 @@ public class DeploymentSerializationTestCase
          }
       });
       
+      BundleInfo info;
       VirtualFile rootFile = OSGiTestHelper.toVirtualFile(archive);
-      BundleInfo info = BundleInfo.createBundleInfo(rootFile);
+      try
+      {
+         info = BundleInfo.createBundleInfo(rootFile);
+      }
+      finally
+      {
+         VFSUtils.safeClose(rootFile);
+      }
       return info;
    }
 }

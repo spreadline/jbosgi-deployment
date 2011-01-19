@@ -49,12 +49,11 @@ public abstract class AbstractDeployment extends AttachmentSupport implements De
    {
       if (location == null)
          throw new IllegalArgumentException("Null location");
-      if (symbolicName == null)
-         throw new IllegalArgumentException("Null symbolicName");
-
       if (version == null)
          version = Version.emptyVersion;
 
+      // symbolicName can be null
+      
       this.location = location;
       this.symbolicName = symbolicName;
       this.version = version.toString();
@@ -124,8 +123,8 @@ public abstract class AbstractDeployment extends AttachmentSupport implements De
          return false;
 
       AbstractDeployment other = (AbstractDeployment)obj;
-      boolean matchLocation = getLocation().equals(other.getLocation());
-      boolean matchName = getSymbolicName().equals(other.getSymbolicName());
+      boolean matchLocation = location.equals(other.location);
+      boolean matchName = symbolicName == other.symbolicName || symbolicName.equals(other.symbolicName);
       boolean matchVersion = getVersion().equals(other.getVersion());
       return matchLocation && matchName && matchVersion;
    }
@@ -139,9 +138,6 @@ public abstract class AbstractDeployment extends AttachmentSupport implements De
    @Override
    public String toString()
    {
-      String symbolicName = getSymbolicName();
-      String version = getVersion();
-      String location = getLocation();
       return "[" + symbolicName + ":" + version + ",location=" + location + "]";
    }
 }
